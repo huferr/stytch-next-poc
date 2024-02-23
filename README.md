@@ -6,13 +6,11 @@
 
 ## Overview
 
-This example application demonstrates how one may use Stytch within a Next.js application using the new [Page Router](https://nextjs.org/docs/pages). If you'd like to see an App Router example, check out our [Next.js App Router example](https://github.com/stytchauth/stytch-nextjs13-example).
+This example application demonstrates how one may use Stytch within a Next.js application using the new [Page Router](https://nextjs.org/docs/pages).
 
-This project uses Stytch's [Next.js SDK](https://stytch.com/docs/sdks/javascript-sdk) which provides pre-built UI components, useful React hooks, headless methods to securely interact with Stytch, and is SSR friendly. This project also utilizes Stytch's [Node Backend SDK](https://www.npmjs.com/package/stytch) for authenticating the logged in user's session.
+This project uses Stytch's [Next.js SDK](https://stytch.com/docs/sdks/javascript-sdk) which provides pre-built UI components, useful React hooks, headless methods to securely interact with Stytch, and is SSR friendly.
 
-We'd also recommend checking out our [Next.js quickstart guide](https://stytch.com/docs/guides/quickstarts/nextjs), which explains how to incorporate the Stytch authentication concepts demonstrated in this example app into your own Next.js application.
-
-This application features Email Magic Links and Google OAuth authentication. You can use this application's source code as a learning resource, or use it as a jumping off point for your own project. We are excited to see what you build with Stytch!
+This application features Email Magic Links and Google OAuth authentication.
 
 ## Set up
 
@@ -81,13 +79,3 @@ This example app showcases a small portion of what you can accomplish with Stytc
 2. Replace the prebuilt UI with your own using by using the SDK's [headless methods](https://stytch.com/docs/sdks/javascript-sdk).
 3. Replace the Google OAuth button with the high converting [Google One Tap UI](https://stytch.com/docs/guides/oauth/sdk).
 4. Secure your app further by building MFA authentication using methods like [WebAuthn](https://stytch.com/docs/sdks/javascript-sdk/webauthn).
-
-## Get help and join the community
-
-#### :speech_balloon: Stytch community Slack
-
-Join the discussion, ask questions, and suggest new features in our ​[Slack community](https://join.slack.com/t/stytch/shared_invite/zt-nil4wo92-jApJ9Cl32cJbEd9esKkvyg)!
-
-#### :question: Need support?
-
-Check out the [Stytch Forum](https://forum.stytch.com/) or email us at [support@stytch.com](mailto:support@stytch.com).

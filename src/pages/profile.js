@@ -1,39 +1,66 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useStytchUser } from "@stytch/nextjs";
-import Profile from "src/components/Profile";
-import loadStytch from "lib/loadStytch";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useStytch, useStytchSession, useStytchUser } from '@stytch/nextjs';
+import loadStytch from 'lib/loadStytch';
 
 export default function ProfilePage() {
   const { user, isInitialized } = useStytchUser();
+  const { session } = useStytchSession();
+  const stytch = useStytch();
+
+  const activated2fa = session && session.authentication_factors.length >= 2;
+
   const router = useRouter();
 
-  // If the Stytch SDK no longer has a User then redirect to login; for example after logging out.
   useEffect(() => {
-    if (isInitialized && !user) {
-      router.replace("/");
-    }
-  }, [user, isInitialized, router]);
+    if (!isInitialized) return;
 
-  return <Profile />;
+    if (!activated2fa) router.push('/2fa');
+
+    if (!user) router.push('/');
+  }, [user, isInitialized, router, activated2fa]);
+
+  if (!isInitialized || !user || !session) return <div>Loading...</div>;
+
+  return (
+    <div className='card'>
+      <h1>Profile</h1>
+      <h2>User object</h2>
+      <pre className='code-block'>
+        <code>{JSON.stringify(user, null, 2)}</code>
+      </pre>
+
+      <h2>Session object</h2>
+      <pre className='code-block'>
+        <code>{JSON.stringify(session, null, 2)}</code>
+      </pre>
+      <p>
+        You are logged in, and a Session has been created. The SDK stores the
+        Session as a token and a JWT in the browser cookies as{' '}
+        <span className='code'>stytch_session</span> and{' '}
+        <span className='code'>stytch_session_jwt</span> respectively.
+      </p>
+      <button
+        className='primary'
+        onClick={() => {
+          stytch.session.revoke();
+          router.push('/');
+        }}
+      >
+        Log out
+      </button>
+    </div>
+  );
 }
 
-/*
-In this example ProfilePage is a protected route, meaning we only allow authenticated users to access this page.
-
-We enforce this server-side by authenticating the Stytch Session which the SDK stores and manages in browser cookies.
-If the session authentication fails, for instance if a logged out user attempts to go to localhost:3000/profile directly we redirect to the login page.
-
-In this example, we authenticate the session JWT as it is more performant. Learn more at https://stytch.com/docs/sessions#session-tokens-vs-JWTs 
-*/
 export async function getServerSideProps({ req }) {
   const redirectRes = {
     redirect: {
-      destination: "/",
+      destination: '/',
       permanent: false,
     },
   };
-  const sessionJWT = req.cookies["stytch_session_jwt"];
+  const sessionJWT = req.cookies['stytch_session_jwt'];
 
   if (!sessionJWT) {
     return redirectRes;
@@ -44,7 +71,7 @@ export async function getServerSideProps({ req }) {
 
   try {
     // Authenticate the session JWT. If an error is thrown the session authentication has failed.
-    await stytchClient.sessions.authenticateJwt({session_jwt: sessionJWT});
+    await stytchClient.sessions.authenticateJwt({ session_jwt: sessionJWT });
     return { props: {} };
   } catch (e) {
     return redirectRes;

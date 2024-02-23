@@ -1,40 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useStytch, useStytchUser } from '@stytch/nextjs';
+import Login from 'src/components/Login';
 
-export default function LoginPage() {
-  const { user } = useStytchUser();
-  const router = useRouter();
+export default function RegisterPage() {
   const stytchClient = useStytch();
+  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState('');
 
-  const authenticate = () =>
+  const createPassword = () => {
     stytchClient.passwords
-      .authenticate({
+      .create({
         email: email,
         password: password,
         session_duration_minutes: 60,
       })
-      .then((response) => {
-        router.push('/2fa');
+      .then(response => {
+        router.push('2fa')
       })
       .catch((error) => {
-        setError('Invalid email or password');
+        if (error.message.includes('duplicate_email')) {
+          setError('Email already exists');
+        }
       });
-
-  const handleLogin = () => {
-    if (user) {
-      stytchClient.session.revoke().then(() => {
-        authenticate();
-      });
-
-      return;
-    }
-
-    authenticate();
   };
 
   return (
@@ -47,7 +39,7 @@ export default function LoginPage() {
         gap: '24px',
       }}
     >
-      <h1>Login</h1>
+      <h1>Register</h1>
       <input
         type='text'
         placeholder='Enter your email'
@@ -64,13 +56,7 @@ export default function LoginPage() {
       />
       <button
         style={{ padding: '6px 12px', fontSize: '16px' }}
-        onClick={handleLogin}
-      >
-        Login
-      </button>
-      <button
-        style={{ padding: '6px 12px', fontSize: '16px' }}
-        onClick={() => router.push('/register')}
+        onClick={createPassword}
       >
         Register
       </button>
