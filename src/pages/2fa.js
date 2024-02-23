@@ -35,9 +35,7 @@ const TwoFA = () => {
   const hasNo2FA = user && Object.keys(user.totps).length === 0;
 
   useEffect(() => {
-    if (code.length === 6) {
-      verify2fa();
-    }
+    if (code.length === 6) verify2fa();
   }, [code]);
 
   useEffect(() => {

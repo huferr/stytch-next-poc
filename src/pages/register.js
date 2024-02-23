@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useStytch, useStytchUser } from '@stytch/nextjs';
-import Login from 'src/components/Login';
+import { useStytch } from '@stytch/nextjs';
 
 export default function RegisterPage() {
   const stytchClient = useStytch();
@@ -19,8 +18,8 @@ export default function RegisterPage() {
         password: password,
         session_duration_minutes: 60,
       })
-      .then(response => {
-        router.push('2fa')
+      .then((response) => {
+        router.push('2fa');
       })
       .catch((error) => {
         if (error.message.includes('duplicate_email')) {
